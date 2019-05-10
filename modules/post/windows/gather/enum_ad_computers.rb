@@ -135,7 +135,11 @@ class MetasploitModule < Msf::Post
           if ip_result[:hostname] == report[:name]
             report[:host] = ip_result[:ip]
             vprint_good("Database report: #{report.inspect}")
-            report_host(report)
+            begin
+                report_host(report)
+            rescue RuntimeError
+                print_warning("Warning: " + ip_result[:hostname] + " data may have special characters that are not stored in DB")
+            end
           end
         end
       end
